@@ -1,0 +1,90 @@
+#nnvsvc-csn-player {
+  border: 1px dashed #000;
+  width: 400px;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  height: 400px;
+  max-height: 400px;
+  z-index: 99999;
+  background: rgba(255, 255, 255, 0.9);
+}
+#nnvsvc-csn-player .button-wrapper {
+  position: relative;
+}
+#nnvsvc-csn-player .button-wrapper .toggle-panel {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px dashed #000;
+  border-right: 0;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: -11px;
+  left: -32px;
+}
+#nnvsvc-csn-player .search-wrapper .input-box {
+  border-bottom: 1px solid #CCC;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+#nnvsvc-csn-player .search-wrapper .input-box #csn-kw {
+  width: 70%;
+  padding: 2px;
+  border: 1px solid #000;
+  background: #FFF;
+}
+#nnvsvc-csn-player .search-wrapper .input-box #csn-search {
+  width: 27%;
+  padding: 2px;
+  border: 1px solid #000;
+  background: #FFF;
+  font-weight: bold;
+  cursor: pointer;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result {
+  height: 300px;
+  max-height: 300px;
+  overflow: auto;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item {
+  padding: 6px 0;
+  border-bottom: 1px dashed #CCC;
+  cursor: pointer;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item .song-name {
+  font-weight: bold;
+  margin: 0;
+  font-size: 14px;
+  color: #00F;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item .song-info {
+  margin: 0;
+  font-size: 12px;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item .song-info .artist:after {
+  content: " -";
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item .song-info .song-detail .duration:after {
+  content: " -";
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item .song-info .song-detail .quality {
+  color: #F00;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item:last-child {
+  border-bottom: none;
+}
+#nnvsvc-csn-player .search-wrapper .csn-search-result .csn-result-item.activated {
+  background: #DDD;
+}
+#nnvsvc-csn-player .csn-player {
+  padding: 10px 0;
+}
+#nnvsvc-csn-player .csn-player audio {
+  width: 100%;
+  border: 1px solid #F00;
+}
+#nnvsvc-csn-player .hidden {
+  display: none;
+}

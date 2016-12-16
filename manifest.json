@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+
+  "name": "ChiaSeNhac.VN for ChatWork",
+  "description": "Direct play music from ChiaSeNhac.vn",
+  "version": "1.0",
+  "icons": {
+    "32": "assets/img/ico.png",
+    "48": "assets/img/ico.png"
+  },
+
+  "browser_action": {
+    "default_icon": "assets/img/ico.png",
+    "default_popup": "popup.html",
+    "default_title": "ChiaSeNhac.vn Player"
+  },
+
+  "permissions": [
+    "tabs"
+  ],
+  "content_scripts": [{
+    "matches": [
+      "*://www.chatwork.com/*"
+    ],
+    "js": [
+      "assets/js/jquery.min.js",
+      "assets/js/chiasenhac-vn.js"
+    ],
+    "css": [
+      "assets/css/player.css"
+    ]
+  }],
+  "web_accessible_resources": [
+    "assets/template/player.html"
+  ]
+}
