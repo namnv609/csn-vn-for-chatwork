@@ -23,11 +23,12 @@ $(function() {
 
   $("body").on("click", "#nnvsvc-csn-player .csn-result-item", function() {
     var csnLink = $(this).data("csnLink");
+    var csnQuality = $(this).data("quality");
 
     $("#nnvsvc-csn-player .csn-result-item").removeClass("activated");
     $(this).addClass("activated");
 
-    chiaSeNhacPlayMusic(csnLink);
+    chiaSeNhacPlayMusic(csnLink, csnQuality);
   });
 
   function chiaSeNhacSearch() {
@@ -70,17 +71,25 @@ $(function() {
     resultItems.map(function(item, idx) {
       var $resultItem = $("#csn-template .csn-result-item").clone();
       var resultGeneral = resultGenerals[idx];
+      var songQuality = (typeof resultGeneral.span !== "undefined" ? resultGeneral.span.content : "64kbps");
 
       $resultItem.find(".song-name").text(item.p[0].a.content);
       $resultItem.find(".artist").text(item.p[1]);
       $resultItem.find(".duration").text(resultGeneral.content);
-      $resultItem.find(".quality").text(resultGeneral.span.content);
+      $resultItem.find(".quality").text(songQuality);
 
-      $searchResult.append($resultItem.attr("data-csn-link", item.p[0].a.href).removeClass("hidden"));
+      $searchResult.append(
+        $resultItem
+          .attr({
+            "data-csn-link": item.p[0].a.href,
+            "data-quality": songQuality
+          })
+          .removeClass("hidden")
+      );
     });
   }
 
-  function chiaSeNhacPlayMusic(csnLink) {
+  function chiaSeNhacPlayMusic(csnLink, musicQuality) {
     var yqlStatement = [
       "SELECT * FROM html WHERE url='",
       _csnBaseURL + csnLink,
@@ -96,7 +105,10 @@ $(function() {
       if (results.script.length) {
         var jsContent = results.script[0].content;
         jsContent = jsContent.match(/(?!title\:)\".*\"/g);
-        $("#nnvsvc-csn-player .csn-player").html('<audio controls loop autoplay><source src="' + jsContent[1].replace(/^\"|\"$/, '') + '" /></audio>')
+        var musicLink = jsContent[1].replace(/^\"|\"$/g, "");
+        musicLink = getBestQualityMusic(musicLink, musicQuality);
+
+        $("#nnvsvc-csn-player .csn-player").html('<audio controls loop autoplay><source src="' + musicLink + '" /></audio>')
       }
 
     }).fail(function(xmlHttpReq, ajaxOpts, error) {
@@ -128,6 +140,30 @@ $(function() {
 
   function toggleCSNLoading() {
     $("#nnvsvc-overlay").toggle();
+  }
+
+  function getBestQualityMusic(csnLink, musicQuality) {
+    var bestQuality = "32";
+    var listQuality = ["32", "64", "128", "192", "320", "m4a"];
+    var linkRegExp = new RegExp(listQuality.join("|"));
+    var musicExtension = ".m4a";
+
+    switch(musicQuality.toLowerCase()) {
+      case "32kpbs":
+      case "64kbps":
+      case "128kbps":
+      case "192kbps":
+      case "320kbps":
+        bestQuality = musicQuality.replace(/\D+/, "");
+        musicExtension = ".mp3";
+        break;
+      case "lossless":
+        bestQuality = "m4a";
+        break;
+    }
+
+    return csnLink.replace(linkRegExp, bestQuality)
+      .replace(/\.[a-zA-Z0-9]+$/, musicExtension);
   }
 
   chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
