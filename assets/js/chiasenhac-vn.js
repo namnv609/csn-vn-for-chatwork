@@ -8,20 +8,7 @@ $(function() {
   });
 
   $("body").on("click", "#nnvsvc-csn-player span.toggle-panel", function() {
-    var $parentElement = $(this).closest("#nnvsvc-csn-player");
-    var rightPixel = "-420px";
-    var spanText = "<";
-
-    if ($parentElement.css("right") === "-420px") {
-      rightPixel = "0px";
-      spanText = ">";
-    }
-
-    $(this).closest("#nnvsvc-csn-player").animate({
-      "right": rightPixel
-    }, "slow", function() {
-      $(this).text(spanText);
-    }.bind(this));
+    toggleCSNPanel($(this));
   });
 
   $("body").on("click", "#csn-search", function() {
@@ -56,6 +43,7 @@ $(function() {
         " | //table[@class=\"tbtable\"]//tr[position() > 1]//span[@class=\"gen\"]'"
       ].join("");
 
+      toggleCSNLoading();
       $.ajax({
         url: _yqlAPIEndpoint + encodeURIComponent(yqlStatement) + "&format=json"
       }).done(function(response) {
@@ -65,6 +53,8 @@ $(function() {
         }
       }).fail(function(xmlHttpReq, ajaxOpts, error) {
         console.log(error);
+      }).always(function() {
+        toggleCSNLoading();
       });
     } else {
       $("#csn-kw").focus();
@@ -97,6 +87,7 @@ $(function() {
       "' AND xpath='//div[@align=\"left\"]//script[not(@src)]'"
     ].join("");
 
+    toggleCSNLoading();
     $.ajax({
       url: _yqlAPIEndpoint + encodeURIComponent(yqlStatement) + "&format=json"
     }).done(function(response) {
@@ -110,6 +101,39 @@ $(function() {
 
     }).fail(function(xmlHttpReq, ajaxOpts, error) {
       console.log(error);
+    }).always(function() {
+      toggleCSNLoading();
     });
   }
+
+  function toggleCSNPanel($toggleElement) {
+    var $parentElement = $toggleElement.closest("#nnvsvc-csn-player");
+    var rightPixel = "-420px";
+    var spanText = "<";
+
+    if ($parentElement.css("right") === "-420px") {
+      rightPixel = "0px";
+      spanText = ">";
+    }
+
+    $toggleElement.closest("#nnvsvc-csn-player").animate({
+      "right": rightPixel
+    }, "slow", function() {
+      $toggleElement.text(spanText);
+      if (spanText === ">") {
+        $("#csn-kw").select();
+      }
+    });
+  }
+
+  function toggleCSNLoading() {
+    $("#nnvsvc-overlay").toggle();
+  }
+
+  chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message === "toggleCSNPanel") {
+      var $toggleElement = $("#nnvsvc-csn-player span.toggle-panel");
+      toggleCSNPanel($toggleElement);
+    }
+  });
 });

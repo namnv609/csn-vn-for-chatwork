@@ -3,7 +3,7 @@
 
   "name": "ChiaSeNhac.VN for ChatWork",
   "description": "Direct play music from ChiaSeNhac.vn",
-  "version": "1.0",
+  "version": "1.01",
   "icons": {
     "32": "assets/img/ico.png",
     "48": "assets/img/ico.png"
@@ -32,5 +32,19 @@
   }],
   "web_accessible_resources": [
     "assets/template/player.html"
-  ]
+  ],
+  "background": {
+    "scripts": [
+      "assets/js/command-handler.js"
+    ],
+    "persistent": false
+  },
+  "commands": {
+    "toggleCSNPanel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Z"
+      },
+      "description": "Toggle ChiaSeNhac panel and focus (select) to search input box"
+    }
+  }
 }
