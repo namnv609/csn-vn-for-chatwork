@@ -145,16 +145,19 @@ $(function() {
   function getBestQualityMusic(csnLink, musicQuality) {
     var bestQuality = "32";
     var listQuality = ["32", "64", "128", "192", "320", "m4a"];
-    var linkRegExp = new RegExp(listQuality.join("|"));
+    var linkRegExp = new RegExp("/(" + listQuality.join("|") + ")/");
     var musicExtension = ".m4a";
 
     switch(musicQuality.toLowerCase()) {
       case "32kpbs":
       case "64kbps":
       case "128kbps":
+        bestQuality = musicQuality.replace(/\D+/, "");
+        musicExtension = ".mp3";
+        break;
       case "192kbps":
       case "320kbps":
-        bestQuality = musicQuality.replace(/\D+/, "");
+        bestQuality = "320";
         musicExtension = ".mp3";
         break;
       case "lossless":
@@ -162,7 +165,7 @@ $(function() {
         break;
     }
 
-    return csnLink.replace(linkRegExp, bestQuality)
+    return csnLink.replace(linkRegExp, "/" + bestQuality + "/")
       .replace(/\.[a-zA-Z0-9]+$/, musicExtension);
   }
 
